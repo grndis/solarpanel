@@ -1,0 +1,7 @@
+Flask
+Pillow
+ultralytics
+torch
+torchvision
+torchaudio
+python-dotenv

@@ -1,0 +1,17 @@
+# Environment variables
+.env
+
+# Python virtual environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Upload folder
+uploads/
+
+# YOLO model file
+*.pt
+
+.DS_Store
