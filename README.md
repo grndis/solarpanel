@@ -67,7 +67,7 @@ This project is a Flask web application that uses a YOLOv8 model to detect crack
     python3 app.py
     ```
 
-2.  Open your web browser and navigate to `http://127.0.0.1:5000` (or the address shown in your terminal).
+2.  Open your web browser and navigate to `http://127.0.0.1:5001` (or the address shown in your terminal).
 
 ## Usage
 
