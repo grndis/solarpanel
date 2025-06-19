@@ -89,7 +89,7 @@ def upload_file():
                     output_filepath = os.path.join(
                         app.config["UPLOAD_FOLDER"], output_filename
                     )
-                    img_with_detections = results[0].plot(labels=True)
+                    img_with_detections = results[0].plot(labels=True, conf=False)
                     cv2.imwrite(output_filepath, img_with_detections)
                     app.logger.info(
                         f"Detection complete. Output saved to {output_filepath}"
