@@ -89,7 +89,8 @@ def upload_file():
                     output_filepath = os.path.join(
                         app.config["UPLOAD_FOLDER"], output_filename
                     )
-                    results[0].save(filename=output_filepath)
+                    img_with_detections = results[0].plot(labels=True)
+                    cv2.imwrite(output_filepath, img_with_detections)
                     app.logger.info(
                         f"Detection complete. Output saved to {output_filepath}"
                     )
@@ -282,4 +283,3 @@ if __name__ == "__main__":
                 "Failed to load YOLO model. Flask app will start but detection will not work."
             )
             app.run(host="0.0.0.0", debug=True)
-
