@@ -21,7 +21,8 @@ logging.basicConfig(level=logging.INFO)
 UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "uploads")
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
 MODEL_PATH = os.getenv("MODEL_PATH", "yolo.pt")
-DETECTION_CONFIDENCE = float(os.getenv("DETECTION_CONFIDENCE", 0.1))
+DETECTION_CONFIDENCE = float(os.getenv("DETECTION_CONFIDENCE", 0.11))  
+IOU_THRESHOLD = float(os.getenv("IOU_THRESHOLD", 0.80))  
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 app.debug = os.getenv("FLASK_DEBUG", "False").lower() == "true"
@@ -83,7 +84,7 @@ def upload_file():
                 )
 
             try:
-                results = model(original_filepath, conf=DETECTION_CONFIDENCE)
+                results = model(original_filepath, conf=DETECTION_CONFIDENCE, iou=IOU_THRESHOLD)
 
                 if results:
                     output_filename = "detected_" + filename
