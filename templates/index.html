@@ -1,398 +1,706 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Solar Panel Crack Detection</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: 'Inter', Arial, sans-serif;
-        }
-        .btn-primary {
-            @apply bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-60 disabled:cursor-not-allowed;
-        }
-        .btn-secondary {
-            @apply bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 disabled:opacity-60 disabled:cursor-not-allowed;
-        }
-        .input-field {
-            @apply border border-gray-300 p-3 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out w-full;
-        }
+      body {
+        font-family: "Inter", Arial, sans-serif;
+      }
+      .btn-primary {
+        @apply bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 disabled:opacity-60 disabled:cursor-not-allowed;
+      }
+      .btn-secondary {
+        @apply bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg shadow-sm transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 disabled:opacity-60 disabled:cursor-not-allowed;
+      }
+      .input-field {
+        @apply border border-gray-300 p-3 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out w-full;
+      }
     </style>
-</head>
-<body class="bg-slate-50 text-slate-800 flex flex-col items-center min-h-screen antialiased">
-    <header class="bg-white text-slate-700 py-5 text-center w-full shadow-sm border-b border-slate-200">
-        <h1 class="text-2xl font-semibold tracking-tight">Solar Panel Crack Detection</h1>
+  </head>
+  <body
+    class="bg-slate-50 text-slate-800 flex flex-col items-center min-h-screen antialiased"
+  >
+    <header
+      class="bg-white text-slate-700 py-5 text-center w-full shadow-sm border-b border-slate-200"
+    >
+      <h1 class="text-2xl font-semibold tracking-tight">
+        Solar Panel Crack Detection
+      </h1>
     </header>
 
     <main class="w-full max-w-4xl mx-auto p-6 space-y-8">
-        <div class="mb-6 border-b border-slate-300">
-            <nav class="-mb-px flex space-x-4" aria-label="Tabs">
-                <button id="tabUpload" class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-indigo-600 border-indigo-500 focus:outline-none"
-                        aria-current="page">
-                    Upload Image
-                </button>
-                <button id="tabLive" class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:outline-none">
-                    Live Detection
-                </button>
-            </nav>
-        </div>
+      <div class="mb-6 border-b border-slate-300">
+        <nav class="-mb-px flex space-x-4" aria-label="Tabs">
+          <button
+            id="tabUpload"
+            class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-indigo-600 border-indigo-500 focus:outline-none"
+            aria-current="page"
+          >
+            Upload Image
+          </button>
+          <button
+            id="tabLive"
+            class="whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm text-slate-500 hover:text-slate-700 hover:border-slate-300 focus:outline-none"
+          >
+            Live Detection
+          </button>
+        </nav>
+      </div>
 
-        <div id="tabContentUpload">
-        <section class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200">
-            <h2 class="text-xl font-semibold text-slate-700 border-b border-slate-200 pb-4 mb-6">Upload Image</h2>
-            <form method="post" enctype="multipart/form-data" id="uploadForm" class="space-y-4">
-                <div>
-                    <label for="fileInput" class="sr-only">Choose file</label>
-                    <input type="file" name="file" id="fileInput" accept="image/*" class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
-                </div>
-                <button type="submit" class="btn-primary w-full sm:w-auto">Upload and Detect</button>
-                <div id="progressBarContainer" class="hidden mt-4 w-full bg-gray-200 rounded-full h-2.5">
-                    <div id="progressBar" class="bg-indigo-600 h-2.5 rounded-full" style="width: 0%"></div>
-                </div>
-                <div id="progressText" class="hidden text-sm text-center text-slate-600 mt-1">0%</div>
-            </form>
+      <div id="tabContentUpload">
+        <section
+          class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200"
+        >
+          <h2
+            class="text-xl font-semibold text-slate-700 border-b border-slate-200 pb-4 mb-6"
+          >
+            Upload Image
+          </h2>
+          <form
+            method="post"
+            enctype="multipart/form-data"
+            id="uploadForm"
+            class="space-y-4"
+          >
+            <div>
+              <label for="fileInput" class="sr-only">Choose file</label>
+              <input
+                type="file"
+                name="file"
+                id="fileInput"
+                accept="image/*"
+                class="input-field file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+              />
+            </div>
+            <button type="submit" class="btn-primary w-full sm:w-auto">
+              Upload and Detect
+            </button>
+          </form>
         </section>
         {% if original_image or detected_image %}
-            <section class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200 mt-8">
-                <h2 class="text-xl font-semibold text-slate-700 border-b border-slate-200 pb-4 mb-6">Detection Results</h2>
-                <div class="grid md:grid-cols-2 gap-6">
-                    {% if original_image %}
-                    <div class="border border-slate-200 p-4 rounded-lg bg-slate-50">
-                        <h3 class="text-lg font-medium text-slate-600 mb-3 text-center">Original Image</h3>
-                        <img src="{{ url_for('send_uploaded_file', filename=original_image) }}" alt="Original Image" class="max-w-full h-auto rounded-md mx-auto shadow-md border border-slate-200">
-                    </div>
-                    {% endif %}
-
-                    {% if detected_image %}
-                    <div class="border border-slate-200 p-4 rounded-lg bg-slate-50">
-                        <h3 class="text-lg font-medium text-slate-600 mb-3 text-center">Detected Cracks</h3>
-                        <img src="{{ url_for('send_uploaded_file', filename=detected_image) }}" alt="Detected Image" class="max-w-full h-auto rounded-md mx-auto shadow-md border border-slate-200">
-                    </div>
-                    {% endif %}
-                </div>
-            </section>
-        {% endif %}
-        </div>
-
-        <div id="tabContentLive" class="hidden">
-        <section class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200">
-            <h2 class="text-xl font-semibold text-slate-700 border-b border-slate-200 pb-4 mb-6">Real-time Camera Detection</h2>
-            <div id="cameraContainer" class="mb-6 text-center bg-slate-100 rounded-lg p-4 border border-slate-200">
-                <div class="relative inline-block max-w-full aspect-video overflow-hidden rounded-md shadow-inner">
-                    <video id="videoElement" autoplay playsinline class="w-full h-full object-cover"></video>
-                    <canvas id="overlayCanvas" class="absolute top-0 left-0 w-full h-full hidden"></canvas>
-                </div>
-                <canvas id="captureCanvas" class="hidden"></canvas>
+        <section
+          class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200 mt-8"
+        >
+          <h2
+            class="text-xl font-semibold text-slate-700 border-b border-slate-200 pb-4 mb-6"
+          >
+            Detection Results
+          </h2>
+          <div class="grid md:grid-cols-2 gap-6">
+            {% if original_image %}
+            <div class="border border-slate-200 p-4 rounded-lg bg-slate-50">
+              <h3 class="text-lg font-medium text-slate-600 mb-3 text-center">
+                Original Image
+              </h3>
+              <img
+                src="{{ url_for('send_uploaded_file', filename=original_image) }}"
+                alt="Original Image"
+                class="max-w-full h-auto rounded-md mx-auto shadow-md border border-slate-200"
+              />
             </div>
-            <div class="flex flex-col sm:flex-row justify-center gap-3">
-                <button id="startCameraButton" class="btn-primary">Start Live Detection</button>
-                <button id="stopCameraButton" disabled class="btn-secondary">Stop Live Detection</button>
+            {% endif %} {% if detected_image %}
+            <div class="border border-slate-200 p-4 rounded-lg bg-slate-50">
+              <h3 class="text-lg font-medium text-slate-600 mb-3 text-center">
+                Detected Cracks
+              </h3>
+              <img
+                src="{{ url_for('send_uploaded_file', filename=detected_image) }}"
+                alt="Detected Image"
+                class="max-w-full h-auto rounded-md mx-auto shadow-md border border-slate-200"
+              />
             </div>
+            {% endif %}
+          </div>
+          <div class="mt-6 pt-4 border-t border-slate-200">
+            <div id="crackPercentageContainer" class="space-y-3">
+              <button
+                id="calculateCrackBtn"
+                data-filename="{{ detected_image or original_image }}"
+                class="btn-secondary w-full sm:w-auto {% if not detected_image %}hidden{% endif %}"
+              >
+                Calculate Crack Percentage
+              </button>
+              <div
+                id="progressBarContainer"
+                class="hidden w-full bg-gray-200 rounded-full h-2.5"
+              >
+                <div
+                  id="progressBar"
+                  class="bg-indigo-600 h-2.5 rounded-full"
+                  style="width: 0%"
+                ></div>
+              </div>
+              <div
+                id="progressText"
+                class="hidden text-sm text-center text-slate-600"
+              >
+                0%
+              </div>
+              <div
+                id="crackPercentageResult"
+                class="text-lg font-semibold text-slate-700"
+              ></div>
+              <div id="crackError" class="text-sm text-red-600"></div>
+            </div>
+            {% if crack_percentage is not none %} {% endif %}
+          </div>
         </section>
-        </div>
-
-        {% if error %}
-            <section class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg shadow-md" role="alert">
-                <strong class="font-semibold">Error:</strong>
-                <span class="block sm:inline ml-1">{{ error }}</span>
-            </section>
         {% endif %}
+      </div>
 
+      <div id="tabContentLive" class="hidden">
+        <section
+          class="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200"
+        >
+          <h2
+            class="text-xl font-semibold text-slate-700 border-b border-slate-200 pb-4 mb-6"
+          >
+            Real-time Camera Detection
+          </h2>
+          <div
+            id="cameraContainer"
+            class="mb-6 text-center bg-slate-100 rounded-lg p-4 border border-slate-200"
+          >
+            <div
+              class="relative inline-block max-w-full aspect-video overflow-hidden rounded-md shadow-inner"
+            >
+              <video
+                id="videoElement"
+                autoplay
+                playsinline
+                class="w-full h-full object-cover"
+              ></video>
+              <canvas
+                id="overlayCanvas"
+                class="absolute top-0 left-0 w-full h-full hidden"
+              ></canvas>
+            </div>
+            <canvas id="captureCanvas" class="hidden"></canvas>
+          </div>
+          <div class="flex flex-col sm:flex-row justify-center gap-3">
+            <button id="startCameraButton" class="btn-primary">
+              Start Live Detection
+            </button>
+            <button id="stopCameraButton" disabled class="btn-secondary">
+              Stop Live Detection
+            </button>
+          </div>
+        </section>
+      </div>
 
+      {% if error %}
+      <section
+        class="bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg shadow-md"
+        role="alert"
+      >
+        <strong class="font-semibold">Error:</strong>
+        <span class="block sm:inline ml-1">{{ error }}</span>
+      </section>
+      {% endif %}
     </main>
 
-    <footer class="text-center mt-auto py-6 border-t border-slate-200 text-slate-500 w-full">
-        <p class="text-sm">&copy; {{ current_year }} All rights reserved.</p>
+    <footer
+      class="text-center mt-auto py-6 border-t border-slate-200 text-slate-500 w-full"
+    >
+      <p class="text-sm">&copy; {{ current_year }} All rights reserved.</p>
     </footer>
 
     <script>
-        const tabUpload = document.getElementById('tabUpload');
-        const tabLive = document.getElementById('tabLive');
-        const tabContentUpload = document.getElementById('tabContentUpload');
-        const tabContentLive = document.getElementById('tabContentLive');
+      const tabUpload = document.getElementById("tabUpload");
+      const tabLive = document.getElementById("tabLive");
+      const tabContentUpload = document.getElementById("tabContentUpload");
+      const tabContentLive = document.getElementById("tabContentLive");
 
-        function switchTab(activeTab, inactiveTab, activeContent, inactiveContent) {
-            activeTab.classList.remove('text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300');
-            activeTab.classList.add('text-indigo-600', 'border-indigo-500');
-            activeTab.setAttribute('aria-current', 'page');
+      function switchTab(
+        activeTab,
+        inactiveTab,
+        activeContent,
+        inactiveContent,
+      ) {
+        activeTab.classList.remove(
+          "text-slate-500",
+          "hover:text-slate-700",
+          "hover:border-slate-300",
+        );
+        activeTab.classList.add("text-indigo-600", "border-indigo-500");
+        activeTab.setAttribute("aria-current", "page");
 
-            inactiveTab.classList.remove('text-indigo-600', 'border-indigo-500');
-            inactiveTab.classList.add('text-slate-500', 'hover:text-slate-700', 'hover:border-slate-300');
-            inactiveTab.removeAttribute('aria-current');
+        inactiveTab.classList.remove("text-indigo-600", "border-indigo-500");
+        inactiveTab.classList.add(
+          "text-slate-500",
+          "hover:text-slate-700",
+          "hover:border-slate-300",
+        );
+        inactiveTab.removeAttribute("aria-current");
 
-            activeContent.classList.remove('hidden');
-            inactiveContent.classList.add('hidden');
+        activeContent.classList.remove("hidden");
+        inactiveContent.classList.add("hidden");
+      }
+
+      tabUpload.addEventListener("click", () => {
+        switchTab(tabUpload, tabLive, tabContentUpload, tabContentLive);
+        if (stream) {
+          stopCameraButton.click();
         }
+      });
 
-        tabUpload.addEventListener('click', () => {
-            switchTab(tabUpload, tabLive, tabContentUpload, tabContentLive);
-            if (stream) {
-                stopCameraButton.click();
-            }
-        });
+      tabLive.addEventListener("click", () => {
+        switchTab(tabLive, tabUpload, tabContentLive, tabContentUpload);
+      });
 
-        tabLive.addEventListener('click', () => {
-            switchTab(tabLive, tabUpload, tabContentLive, tabContentUpload);
-        });
+      const video = document.getElementById("videoElement");
+      const captureCanvas = document.getElementById("captureCanvas");
+      const overlayCanvas = document.getElementById("overlayCanvas");
+      const overlayCtx = overlayCanvas.getContext("2d");
+      const startCameraButton = document.getElementById("startCameraButton");
+      const stopCameraButton = document.getElementById("stopCameraButton");
+      const uploadForm = document.getElementById("uploadForm");
+      const fileInput = document.getElementById("fileInput");
+      let stream = null;
+      let detectionInterval = null;
+      const DETECTION_INTERVAL_MS = 1000;
 
-
-        const video = document.getElementById('videoElement');
-        const captureCanvas = document.getElementById('captureCanvas');
-        const overlayCanvas = document.getElementById('overlayCanvas');
-        const overlayCtx = overlayCanvas.getContext('2d');
-        const startCameraButton = document.getElementById('startCameraButton');
-        const stopCameraButton = document.getElementById('stopCameraButton');
-        const uploadForm = document.getElementById('uploadForm');
-        const fileInput = document.getElementById('fileInput');
-        let stream = null;
-        let detectionInterval = null;
-        const DETECTION_INTERVAL_MS = 1000;
-
-        function resizeOverlay() {
-            if (video.videoWidth > 0 && video.videoHeight > 0) {
-                overlayCanvas.width = video.videoWidth;
-                overlayCanvas.height = video.videoHeight;
-                captureCanvas.width = video.videoWidth;
-                captureCanvas.height = video.videoHeight;
-            }
+      function resizeOverlay() {
+        if (video.videoWidth > 0 && video.videoHeight > 0) {
+          overlayCanvas.width = video.videoWidth;
+          overlayCanvas.height = video.videoHeight;
+          captureCanvas.width = video.videoWidth;
+          captureCanvas.height = video.videoHeight;
         }
+      }
 
-        startCameraButton.addEventListener('click', async () => {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-                video.srcObject = stream;
-                video.onloadedmetadata = () => {
-                    video.play();
-                    resizeOverlay();
-                    overlayCanvas.classList.remove('hidden');
-                };
-                video.onresize = resizeOverlay;
+      startCameraButton.addEventListener("click", async () => {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+          });
+          video.srcObject = stream;
+          video.onloadedmetadata = () => {
+            video.play();
+            resizeOverlay();
+            overlayCanvas.classList.remove("hidden");
+          };
+          video.onresize = resizeOverlay;
 
-                startCameraButton.disabled = true;
-                stopCameraButton.disabled = false;
-                fileInput.disabled = true;
-                uploadForm.querySelector('button[type="submit"]').disabled = true;
-                startLiveDetection();
-            } catch (err) {
-                console.error("Error accessing camera: ", err);
-                alert("Could not access the camera. Please ensure permissions are granted and try again. Error: " + err.message);
-                startCameraButton.disabled = false;
-                stopCameraButton.disabled = true;
-                fileInput.disabled = false;
-                uploadForm.querySelector('button[type="submit"]').disabled = false;
+          startCameraButton.disabled = true;
+          stopCameraButton.disabled = false;
+          fileInput.disabled = true;
+          uploadForm.querySelector('button[type="submit"]').disabled = true;
+          startLiveDetection();
+        } catch (err) {
+          console.error("Error accessing camera: ", err);
+          alert(
+            "Could not access the camera. Please ensure permissions are granted and try again. Error: " +
+              err.message,
+          );
+          startCameraButton.disabled = false;
+          stopCameraButton.disabled = true;
+          fileInput.disabled = false;
+          uploadForm.querySelector('button[type="submit"]').disabled = false;
+        }
+      });
+
+      stopCameraButton.addEventListener("click", () => {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+          video.srcObject = null;
+          stream = null;
+          stopLiveDetection();
+          startCameraButton.disabled = false;
+          stopCameraButton.disabled = true;
+          fileInput.disabled = false;
+          uploadForm.querySelector('button[type="submit"]').disabled = false;
+          overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+          overlayCanvas.classList.add("hidden");
+        }
+      });
+
+      function startLiveDetection() {
+        if (detectionInterval) clearInterval(detectionInterval);
+        detectionInterval = setInterval(async () => {
+          if (
+            stream &&
+            video.readyState >= video.HAVE_METADATA &&
+            !video.paused
+          ) {
+            if (
+              captureCanvas.width !== video.videoWidth ||
+              captureCanvas.height !== video.videoHeight
+            ) {
+              captureCanvas.width = video.videoWidth;
+              captureCanvas.height = video.videoHeight;
             }
-        });
+            const captureCtx = captureCanvas.getContext("2d");
+            captureCtx.drawImage(
+              video,
+              0,
+              0,
+              captureCanvas.width,
+              captureCanvas.height,
+            );
 
-        stopCameraButton.addEventListener('click', () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                video.srcObject = null;
-                stream = null;
-                stopLiveDetection();
-                startCameraButton.disabled = false;
-                stopCameraButton.disabled = true;
-                fileInput.disabled = false;
-                uploadForm.querySelector('button[type="submit"]').disabled = false;
-                overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
-                overlayCanvas.classList.add('hidden');
-            }
-        });
-
-        function startLiveDetection() {
-            if (detectionInterval) clearInterval(detectionInterval);
-            detectionInterval = setInterval(async () => {
-                if (stream && video.readyState >= video.HAVE_METADATA && !video.paused) {
-                    if (captureCanvas.width !== video.videoWidth || captureCanvas.height !== video.videoHeight) {
-                        captureCanvas.width = video.videoWidth;
-                        captureCanvas.height = video.videoHeight;
-                    }
-                    const captureCtx = captureCanvas.getContext('2d');
-                    captureCtx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
-                    
-                    captureCanvas.toBlob(async (blob) => {
-                        if (!blob) {
-                            console.error('Failed to create blob from canvas.');
-                            return;
-                        }
-                        const formData = new FormData();
-                        const fileName = `liveframe.jpg`;
-                        formData.append('file', blob, fileName);
-
-                        try {
-                            const response = await fetch('/live_detect', {
-                                method: 'POST',
-                                body: formData
-                            });
-                            if (!response.ok) {
-                                throw new Error(`HTTP error! status: ${response.status}`);
-                            }
-                            const data = await response.json();
-                            drawDetections(data.detections);
-                        } catch (error) {
-                            console.error('Error during live detection:', error);
-                            overlayCtx.fillStyle = 'rgba(255, 0, 0, 0.7)';
-                            overlayCtx.font = 'bold 16px Inter, Arial, sans-serif';
-                            overlayCtx.textAlign = 'center';
-                            overlayCtx.fillText('Detection Error', overlayCanvas.width / 2, overlayCanvas.height / 2);
-                        }
-                    }, 'image/jpeg', 0.9);
+            captureCanvas.toBlob(
+              async (blob) => {
+                if (!blob) {
+                  console.error("Failed to create blob from canvas.");
+                  return;
                 }
-            }, DETECTION_INTERVAL_MS);
+                const formData = new FormData();
+                const fileName = `liveframe.jpg`;
+                formData.append("file", blob, fileName);
+
+                try {
+                  const response = await fetch("/live_detect", {
+                    method: "POST",
+                    body: formData,
+                  });
+                  if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                  }
+                  const data = await response.json();
+                  drawDetections(data.detections);
+                } catch (error) {
+                  console.error("Error during live detection:", error);
+                  overlayCtx.fillStyle = "rgba(255, 0, 0, 0.7)";
+                  overlayCtx.font = "bold 16px Inter, Arial, sans-serif";
+                  overlayCtx.textAlign = "center";
+                  overlayCtx.fillText(
+                    "Detection Error",
+                    overlayCanvas.width / 2,
+                    overlayCanvas.height / 2,
+                  );
+                }
+              },
+              "image/jpeg",
+              0.9,
+            );
+          }
+        }, DETECTION_INTERVAL_MS);
+      }
+
+      function stopLiveDetection() {
+        if (detectionInterval) {
+          clearInterval(detectionInterval);
+          detectionInterval = null;
         }
+      }
 
-        function stopLiveDetection() {
-            if (detectionInterval) {
-                clearInterval(detectionInterval);
-                detectionInterval = null;
-            }
+      function drawDetections(detections) {
+        if (
+          overlayCanvas.width !== video.videoWidth ||
+          overlayCanvas.height !== video.videoHeight
+        ) {
+          resizeOverlay();
         }
+        overlayCtx.drawImage(
+          video,
+          0,
+          0,
+          overlayCanvas.width,
+          overlayCanvas.height,
+        );
 
-        function drawDetections(detections) {
-            if (overlayCanvas.width !== video.videoWidth || overlayCanvas.height !== video.videoHeight) {
-                resizeOverlay();
-            }
-            overlayCtx.drawImage(video, 0, 0, overlayCanvas.width, overlayCanvas.height);
+        if (detections && detections.length > 0) {
+          detections.forEach((det) => {
+            overlayCtx.strokeStyle = "rgba(239, 68, 68, 0.9)";
+            overlayCtx.lineWidth = 3;
+            overlayCtx.beginPath();
+            const [x1, y1, x2, y2] = det.box;
+            overlayCtx.rect(x1, y1, x2 - x1, y2 - y1);
+            overlayCtx.stroke();
 
-            if (detections && detections.length > 0) {
-                detections.forEach(det => {
-                    overlayCtx.strokeStyle = 'rgba(239, 68, 68, 0.9)';
-                    overlayCtx.lineWidth = 3;
-                    overlayCtx.beginPath();
-                    const [x1, y1, x2, y2] = det.box;
-                    overlayCtx.rect(x1, y1, x2 - x1, y2 - y1);
-                    overlayCtx.stroke();
-                    
-                    overlayCtx.fillStyle = 'rgba(239, 68, 68, 0.9)';
-                    overlayCtx.font = 'bold 14px Inter, Arial, sans-serif';
-                    const text = `${det.label} (${(det.confidence * 100).toFixed(0)}%)`;
-                    const textMetrics = overlayCtx.measureText(text);
-                    const textX = x1;
-                    const textY = y1 > 20 ? y1 - 5 : y1 + 18;
-                    overlayCtx.fillStyle = 'rgba(255, 255, 255, 0.85)';
-                    overlayCtx.fillRect(textX -2, textY - 14, textMetrics.width + 4, 18);
-                    overlayCtx.fillStyle = 'rgba(239, 68, 68, 0.9)';
-                    overlayCtx.fillText(text, textX, textY);
-                });
-            }
+            overlayCtx.fillStyle = "rgba(239, 68, 68, 0.9)";
+            overlayCtx.font = "bold 14px Inter, Arial, sans-serif";
+            const text = `${det.label} (${(det.confidence * 100).toFixed(0)}%)`;
+            const textMetrics = overlayCtx.measureText(text);
+            const textX = x1;
+            const textY = y1 > 20 ? y1 - 5 : y1 + 18;
+            overlayCtx.fillStyle = "rgba(255, 255, 255, 0.85)";
+            overlayCtx.fillRect(
+              textX - 2,
+              textY - 14,
+              textMetrics.width + 4,
+              18,
+            );
+            overlayCtx.fillStyle = "rgba(239, 68, 68, 0.9)";
+            overlayCtx.fillText(text, textX, textY);
+          });
         }
+      }
 
-        window.addEventListener('beforeunload', () => {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
+      window.addEventListener("beforeunload", () => {
+        if (stream) {
+          stream.getTracks().forEach((track) => track.stop());
+        }
+      });
+
+      function attachCrackCalculationListener() {
+        const calculateCrackBtn = document.getElementById("calculateCrackBtn");
+        const crackPercentageResult = document.getElementById(
+          "crackPercentageResult",
+        );
+        const crackError = document.getElementById("crackError");
+        const progressBarContainerResults = document.querySelector(
+          "#crackPercentageContainer #progressBarContainer",
+        );
+        const progressBarResults = document.querySelector(
+          "#crackPercentageContainer #progressBar",
+        );
+        const progressTextResults = document.querySelector(
+          "#crackPercentageContainer #progressText",
+        );
+
+        if (calculateCrackBtn) {
+          calculateCrackBtn.addEventListener("click", async function () {
+            const filename = this.dataset.filename;
+            if (!filename) {
+              crackError.textContent =
+                "Error: No image file specified for calculation.";
+              return;
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const uploadForm = document.getElementById('uploadForm');
-            const fileInput = document.getElementById('fileInput');
-            const progressBarContainer = document.getElementById('progressBarContainer');
-            const progressBar = document.getElementById('progressBar');
-            const progressText = document.getElementById('progressText');
+            crackPercentageResult.textContent = "";
+            crackError.textContent = "";
+            if (progressBarResults) progressBarResults.style.width = "0%";
+            if (progressTextResults)
+              progressTextResults.textContent = "Calculating...";
+            if (progressBarContainerResults)
+              progressBarContainerResults.classList.remove("hidden");
+            if (progressTextResults)
+              progressTextResults.classList.remove("hidden");
+            this.disabled = true;
 
-            if (uploadForm) {
-                uploadForm.addEventListener('submit', function(event) {
-                    event.preventDefault(); 
+            try {
+              // Simulate progress for calculation as there's no direct XHR upload progress here
+              let progress = 0;
+              const interval = setInterval(() => {
+                progress += 10;
+                if (progress <= 90) {
+                  // Don't go to 100 until fetch completes
+                  if (progressBarResults)
+                    progressBarResults.style.width = progress + "%";
+                  if (progressTextResults)
+                    progressTextResults.textContent = progress + "%";
+                } else {
+                  clearInterval(interval);
+                }
+              }, 100);
 
-                    if (!fileInput.files || fileInput.files.length === 0) {
-                        alert('Please select a file to upload.');
-                        return;
+              const response = await fetch(`/calculate_crack/${filename}`);
+              clearInterval(interval); // Clear interval once fetch is initiated or done
+              if (progressBarResults) progressBarResults.style.width = "100%";
+              if (progressTextResults) progressTextResults.textContent = "100%";
+
+              const data = await response.json();
+
+              if (response.ok && data.crack_percentage !== undefined) {
+                crackPercentageResult.textContent = `Crack Percentage: ${data.crack_percentage}%`;
+              } else {
+                crackError.textContent =
+                  data.error || "Failed to calculate crack percentage.";
+              }
+            } catch (error) {
+              console.error("Error calculating crack percentage:", error);
+              crackError.textContent = "An error occurred. Please try again.";
+            } finally {
+              setTimeout(() => {
+                // Hide progress bar after a short delay
+                if (progressBarContainerResults)
+                  progressBarContainerResults.classList.add("hidden");
+                if (progressTextResults)
+                  progressTextResults.classList.add("hidden");
+              }, 500);
+              this.disabled = false;
+            }
+          });
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        attachCrackCalculationListener();
+        const uploadForm = document.getElementById("uploadForm");
+        const fileInput = document.getElementById("fileInput");
+        const uploadProgressBarContainer = document.querySelector(
+          "#crackPercentageContainer #progressBarContainer",
+        );
+        const uploadProgressBar = document.querySelector(
+          "#crackPercentageContainer #progressBar",
+        );
+        const uploadProgressText = document.querySelector(
+          "#crackPercentageContainer #progressText",
+        );
+
+        if (uploadForm) {
+          uploadForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+              alert("Please select a file to upload.");
+              return;
+            }
+
+            const formData = new FormData(uploadForm);
+            const xhr = new XMLHttpRequest();
+
+            xhr.open("POST", "/", true);
+
+            xhr.upload.onprogress = function (e) {
+              if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                if (uploadProgressBar)
+                  uploadProgressBar.style.width = percentComplete + "%";
+                if (uploadProgressText)
+                  uploadProgressText.textContent =
+                    Math.round(percentComplete) + "%";
+                if (uploadProgressBarContainer)
+                  uploadProgressBarContainer.classList.remove("hidden");
+                if (uploadProgressText)
+                  uploadProgressText.classList.remove("hidden");
+              }
+            };
+
+            xhr.onloadstart = function () {
+              if (uploadProgressBarContainer)
+                uploadProgressBarContainer.classList.remove("hidden");
+              if (uploadProgressText)
+                uploadProgressText.classList.remove("hidden");
+              if (uploadProgressBar) uploadProgressBar.style.width = "0%";
+              if (uploadProgressText) uploadProgressText.textContent = "0%";
+              uploadForm.querySelector('button[type="submit"]').disabled = true;
+            };
+
+            xhr.onload = function () {
+              if (uploadProgressBarContainer)
+                uploadProgressBarContainer.classList.add("hidden");
+              if (uploadProgressText)
+                uploadProgressText.classList.add("hidden");
+              uploadForm.querySelector('button[type="submit"]').disabled =
+                false;
+
+              if (xhr.status >= 200 && xhr.status < 300) {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(
+                  xhr.responseText,
+                  "text/html",
+                );
+
+                const newResultsSection = doc.querySelector(
+                  "#tabContentUpload > section:nth-of-type(2)",
+                );
+                let existingResultsSection = document.querySelector(
+                  "#tabContentUpload > section:nth-of-type(2)",
+                );
+
+                if (newResultsSection) {
+                  if (
+                    existingResultsSection &&
+                    existingResultsSection.classList.contains("bg-white")
+                  ) {
+                    existingResultsSection.innerHTML =
+                      newResultsSection.innerHTML;
+                    existingResultsSection.className =
+                      newResultsSection.className;
+                    attachCrackCalculationListener();
+                    const newCrackPercentage = doc.body.dataset.crackPercentage;
+                    const crackPercentageResultDiv = document.getElementById(
+                      "crackPercentageResult",
+                    );
+                    const calculateCrackBtn =
+                      document.getElementById("calculateCrackBtn");
+                    if (newCrackPercentage && crackPercentageResultDiv) {
+                      crackPercentageResultDiv.textContent =
+                        "Crack Percentage: " + newCrackPercentage + "%";
                     }
+                    if (calculateCrackBtn) {
+                      const detectedImgElement = doc.querySelector(
+                        'img[alt="Detected Image"]',
+                      );
+                      if (detectedImgElement && detectedImgElement.src) {
+                        const urlParts = detectedImgElement.src.split("/");
+                        calculateCrackBtn.dataset.filename =
+                          urlParts[urlParts.length - 1];
+                        calculateCrackBtn.classList.remove("hidden");
+                      } else {
+                        calculateCrackBtn.classList.add("hidden");
+                      }
+                    }
+                  } else {
+                    const formSection = document.querySelector(
+                      "#tabContentUpload > section:nth-of-type(1)",
+                    );
+                    if (formSection) {
+                      formSection.insertAdjacentHTML(
+                        "afterend",
+                        newResultsSection.outerHTML,
+                      );
+                      attachCrackCalculationListener();
+                    }
+                  }
+                } else if (
+                  existingResultsSection &&
+                  existingResultsSection.classList.contains("bg-white")
+                ) {
+                  existingResultsSection.remove();
+                }
 
-                    const formData = new FormData(uploadForm);
-                    const xhr = new XMLHttpRequest();
+                const newErrorSection = doc.querySelector(
+                  "main > section.bg-red-50",
+                );
+                let existingErrorSection = document.querySelector(
+                  "main > section.bg-red-50",
+                );
 
-                    xhr.open('POST', '/', true);
+                if (newErrorSection) {
+                  if (existingErrorSection) {
+                    existingErrorSection.innerHTML = newErrorSection.innerHTML;
+                    existingErrorSection.className = newErrorSection.className;
+                    existingErrorSection.style.display = "";
+                  } else {
+                    const mainElement = document.querySelector("main");
+                    if (mainElement) {
+                      const footerElement = mainElement.querySelector("footer");
+                      if (footerElement) {
+                        mainElement.insertBefore(
+                          newErrorSection,
+                          footerElement,
+                        );
+                      } else {
+                        mainElement.appendChild(newErrorSection);
+                      }
+                    }
+                  }
+                } else if (existingErrorSection) {
+                  existingErrorSection.style.display = "none";
+                }
+              } else {
+                alert(
+                  "Upload failed. Status: " +
+                    xhr.status +
+                    ". Please try again.",
+                );
+              }
+            };
 
-                    xhr.upload.onprogress = function(e) {
-                        if (e.lengthComputable) {
-                            const percentComplete = (e.loaded / e.total) * 100;
-                            progressBar.style.width = percentComplete + '%';
-                            progressText.textContent = Math.round(percentComplete) + '%';
-                            progressBarContainer.classList.remove('hidden');
-                            progressText.classList.remove('hidden');
-                        }
-                    };
+            xhr.onerror = function () {
+              alert("An error occurred during the upload. Please try again.");
+              if (uploadProgressBarContainer)
+                uploadProgressBarContainer.classList.add("hidden");
+              if (uploadProgressText)
+                uploadProgressText.classList.add("hidden");
+              uploadForm.querySelector('button[type="submit"]').disabled =
+                false;
+            };
 
-                    xhr.onloadstart = function() {
-                        progressBar.style.width = '0%';
-                        progressText.textContent = '0%';
-                        progressBarContainer.classList.remove('hidden');
-                        progressText.classList.remove('hidden');
-                        uploadForm.querySelector('button[type="submit"]').disabled = true;
-                    };
-
-                    xhr.onload = function() {
-                        progressBarContainer.classList.add('hidden');
-                        progressText.classList.add('hidden');
-                        uploadForm.querySelector('button[type="submit"]').disabled = false;
-
-                        if (xhr.status >= 200 && xhr.status < 300) {
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(xhr.responseText, 'text/html');
-
-                            // Update Detection Results Section
-                            const newResultsSection = doc.querySelector('#tabContentUpload > section:nth-of-type(2)'); // Second section within tabContentUpload
-                            let existingResultsSection = document.querySelector('#tabContentUpload > section:nth-of-type(2)');
-                            
-                            if (newResultsSection) {
-                                if (existingResultsSection && existingResultsSection.classList.contains('bg-white')) { // Heuristic to check if it's the results section
-                                    existingResultsSection.innerHTML = newResultsSection.innerHTML;
-                                    existingResultsSection.className = newResultsSection.className; // Update classes if they change
-                                } else {
-                                    // If no existing results section or it's not the right one, insert after the form section
-                                    const formSection = document.querySelector('#tabContentUpload > section:nth-of-type(1)');
-                                    if (formSection) {
-                                        formSection.insertAdjacentHTML('afterend', newResultsSection.outerHTML);
-                                    }
-                                }
-                            } else if (existingResultsSection && existingResultsSection.classList.contains('bg-white')) {
-                                // If new response has no results section, but one exists, remove it
-                                existingResultsSection.remove();
-                            }
-
-                            // Update Error Section
-                            const newErrorSection = doc.querySelector('main > section.bg-red-50'); // Error section is a direct child of main
-                            let existingErrorSection = document.querySelector('main > section.bg-red-50');
-
-                            if (newErrorSection) {
-                                if (existingErrorSection) {
-                                    existingErrorSection.innerHTML = newErrorSection.innerHTML;
-                                    existingErrorSection.className = newErrorSection.className;
-                                    existingErrorSection.style.display = ''; // Ensure it's visible
-                                } else {
-                                    const mainElement = document.querySelector('main');
-                                    if (mainElement) {
-                                        // Insert before the footer or as the last child of main
-                                        const footerElement = mainElement.querySelector('footer');
-                                        if (footerElement) {
-                                            mainElement.insertBefore(newErrorSection, footerElement);
-                                        } else {
-                                            mainElement.appendChild(newErrorSection);
-                                        }
-                                    }
-                                }
-                            } else if (existingErrorSection) {
-                                // If new response has no error, but one exists, hide or remove it
-                                existingErrorSection.style.display = 'none'; // Or existingErrorSection.remove();
-                            }
-
-                        } else {
-                            alert('Upload failed. Status: ' + xhr.status + '. Please try again.');
-                        }
-                    };
-
-                    xhr.onerror = function() {
-                        alert('An error occurred during the upload. Please try again.');
-                        progressBarContainer.classList.add('hidden');
-                        progressText.classList.add('hidden');
-                        uploadForm.querySelector('button[type="submit"]').disabled = false;
-                    };
-
-                    xhr.send(formData);
-                });
-            }
-        });
+            xhr.send(formData);
+          });
+        }
+      });
     </script>
-</body>
+  </body>
 </html>
