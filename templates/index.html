@@ -71,7 +71,7 @@
             <button
               type="submit"
               id="uploadButton"
-              class="btn btn-success btn-lg w-100"
+              class="btn btn-primary btn-md w-100"
             >
               Upload Image
             </button>
@@ -110,7 +110,7 @@
               <button
                 id="calculateCrackBtn"
                 data-filename="{{ detected_image or original_image }}"
-                class="btn btn-secondary w-100 w-sm-auto {% if not detected_image %}d-none{% endif %}"
+                class="btn btn-primary w-100 w-sm-auto {% if not detected_image %}d-none{% endif %}"
               >
                 Calculate Crack Percentage
               </button>
@@ -135,8 +135,11 @@
               >
                 0%
               </div>
-              <div id="crackPercentageResult" class="h5 mt-2"></div>
-              <div id="crackError" class="text-danger small mt-1"></div>
+              <div id="crackPercentageResult" class="h5 mt-2 text-center"></div>
+              <div
+                id="crackError"
+                class="text-danger text-center small mt-1"
+              ></div>
             </div>
             {% if crack_percentage is not none %} {% endif %}
           </div>
@@ -446,8 +449,8 @@
               progressTextResults.textContent = "Calculating...";
             if (progressBarContainerResults)
               progressBarContainerResults.classList.remove("d-none");
-            if (progressTextResults)
-              progressTextResults.classList.remove("d-none");
+            // if (progressTextResults)
+            //   progressTextResults.classList.remove("d-none");
             this.disabled = true;
 
             try {
@@ -457,8 +460,6 @@
                 if (progress <= 90) {
                   if (progressBarResults)
                     progressBarResults.style.width = progress + "%";
-                  if (progressTextResults)
-                    progressTextResults.textContent = progress + "%";
                 } else {
                   clearInterval(interval);
                 }
@@ -467,7 +468,6 @@
               const response = await fetch(`/calculate_crack/${filename}`);
               clearInterval(interval);
               if (progressBarResults) progressBarResults.style.width = "100%";
-              if (progressTextResults) progressTextResults.textContent = "100%";
 
               const data = await response.json();
 
