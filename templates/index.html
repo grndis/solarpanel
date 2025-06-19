@@ -449,9 +449,13 @@
               progressTextResults.textContent = "Calculating...";
             if (progressBarContainerResults)
               progressBarContainerResults.classList.remove("d-none");
-            // if (progressTextResults)
-            //   progressTextResults.classList.remove("d-none");
             this.disabled = true;
+
+            const existingEfficiencyElement =
+              document.getElementById("efficiencyResult");
+            if (existingEfficiencyElement) {
+              existingEfficiencyElement.remove();
+            }
 
             try {
               let progress = 0;
@@ -473,6 +477,17 @@
 
               if (response.ok && data.crack_percentage !== undefined) {
                 crackPercentageResult.textContent = `Crack Percentage: ${data.crack_percentage}%`;
+                if (data.efficiency !== undefined) {
+                  const efficiencyElement = document.createElement("p");
+                  efficiencyElement.id = "efficiencyResult";
+                  efficiencyElement.textContent = `Estimated Efficiency: ${data.efficiency}%`;
+                  efficiencyElement.className = crackPercentageResult.className;
+                  efficiencyElement.classList.add("mt-1");
+                  crackPercentageResult.parentNode.insertBefore(
+                    efficiencyElement,
+                    crackPercentageResult.nextSibling,
+                  );
+                }
               } else {
                 crackError.textContent =
                   data.error || "Failed to calculate crack percentage.";

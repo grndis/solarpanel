@@ -152,11 +152,17 @@ def upload_file():
                         results, original_filepath
                     )
 
+                    efficiency = None
+                    if crack_percentage is not None:
+                        efficiency = -0.4579 * crack_percentage + 97.475
+                        efficiency = round(efficiency, 2)
+
                     if filename.startswith("capture-"):
                         return jsonify(
                             original_image=filename,
                             detected_image=output_filename,
                             crack_percentage=crack_percentage,
+                            efficiency=efficiency,
                         )
                     else:
                         return render_template(
@@ -164,6 +170,7 @@ def upload_file():
                             original_image=filename,
                             detected_image=output_filename,
                             crack_percentage=crack_percentage,
+                            efficiency=efficiency,
                             current_year=current_year,
                         )
                 else:
@@ -285,10 +292,11 @@ def calculate_crack_route(filename):
             results, original_image_path_for_calc
         )
 
+        efficiency = None
         if crack_percentage is not None:
-            return jsonify(
-                crack_percentage=crack_percentage, image_filename=image_filename
-            )
+            efficiency = -0.4579 * crack_percentage + 97.475
+            efficiency = round(efficiency, 2)
+            return jsonify(crack_percentage=crack_percentage, efficiency=efficiency)
         else:
             return jsonify(error="Failed to calculate crack percentage."), 500
     except Exception as e:
