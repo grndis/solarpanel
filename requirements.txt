@@ -7,3 +7,4 @@ torchaudio
 python-dotenv
 numpy
 opencv-python
+shapely

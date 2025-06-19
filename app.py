@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, render_template, send_from_directory, jsonify
+import numpy as np
 from werkzeug.utils import secure_filename
 from PIL import Image
 import torch
@@ -89,8 +90,60 @@ def upload_file():
                     output_filepath = os.path.join(
                         app.config["UPLOAD_FOLDER"], output_filename
                     )
-                    img_with_detections = results[0].plot(labels=True, conf=False)
-                    cv2.imwrite(output_filepath, img_with_detections)
+
+                    img_to_draw_on = cv2.imread(original_filepath)
+                    if img_to_draw_on is None:
+                        app.logger.error(
+                            f"Could not read image for drawing: {original_filepath}"
+                        )
+                    else:
+                        crack_polygons_for_drawing = []
+                        if results and results[0].boxes is not None:
+                            for box_data in results[0].boxes:
+                                if (
+                                    hasattr(box_data, "cls")
+                                    and int(box_data.cls[0]) == 0
+                                ):
+                                    xyxy = box_data.xyxy[0].cpu().numpy()
+                                    polygon = Polygon(
+                                        [
+                                            (xyxy[0], xyxy[1]),
+                                            (xyxy[2], xyxy[1]),
+                                            (xyxy[2], xyxy[3]),
+                                            (xyxy[0], xyxy[3]),
+                                        ]
+                                    )
+                                    crack_polygons_for_drawing.append(polygon)
+
+                        if crack_polygons_for_drawing:
+                            merged_cracks_for_drawing = unary_union(
+                                crack_polygons_for_drawing
+                            )
+                            if merged_cracks_for_drawing.geom_type == "Polygon":
+                                exterior_coords = np.array(
+                                    merged_cracks_for_drawing.exterior.coords,
+                                    dtype=np.int32,
+                                )
+                                cv2.polylines(
+                                    img_to_draw_on,
+                                    [exterior_coords],
+                                    isClosed=True,
+                                    color=(255, 0, 0),
+                                    thickness=10,
+                                )
+                            elif merged_cracks_for_drawing.geom_type == "MultiPolygon":
+                                for poly in merged_cracks_for_drawing.geoms:
+                                    exterior_coords = np.array(
+                                        poly.exterior.coords, dtype=np.int32
+                                    )
+                                    cv2.polylines(
+                                        img_to_draw_on,
+                                        [exterior_coords],
+                                        isClosed=True,
+                                        color=(255, 0, 0),
+                                        thickness=8,
+                                    )
+                        cv2.imwrite(output_filepath, img_to_draw_on)
                     app.logger.info(
                         f"Detection complete. Output saved to {output_filepath}"
                     )
@@ -146,6 +199,10 @@ def upload_file():
     return render_template("index.html", current_year=current_year)
 
 
+from shapely.geometry import Polygon
+from shapely.ops import unary_union
+
+
 def calculate_crack_percentage_from_results(results, image_path):
     """Calculates crack percentage based on YOLO detection results (bounding box areas)."""
     try:
@@ -157,15 +214,28 @@ def calculate_crack_percentage_from_results(results, image_path):
             return None
 
         total_image_area = img.shape[0] * img.shape[1]
-        crack_area = 0
+        crack_polygons = []
 
         if results and results[0].boxes is not None:
             for box_data in results[0].boxes:
                 if hasattr(box_data, "cls") and int(box_data.cls[0]) == 0:
                     xyxy = box_data.xyxy[0].cpu().numpy()
-                    box_width = xyxy[2] - xyxy[0]
-                    box_height = xyxy[3] - xyxy[1]
-                    crack_area += box_width * box_height
+                    polygon = Polygon(
+                        [
+                            (xyxy[0], xyxy[1]),
+                            (xyxy[2], xyxy[1]),
+                            (xyxy[2], xyxy[3]),
+                            (xyxy[0], xyxy[3]),
+                        ]
+                    )
+                    crack_polygons.append(polygon)
+
+        if not crack_polygons:
+            app.logger.info(f"No crack polygons found for {image_path}")
+            return 0
+
+        merged_cracks = unary_union(crack_polygons)
+        crack_area = merged_cracks.area
 
         if total_image_area > 0:
             percentage = (crack_area / total_image_area) * 100
